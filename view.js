@@ -23,6 +23,20 @@ export default class View {
         });
     }
 
+    render(game){
+
+        console.log(game)
+
+        const {moves, currentPlayer, isComplete, stats: {playerStats, ties}, status: { plyable, winner }} = game
+        
+        this.#hideAll()
+        this.#resetSquares()
+        this.#initializeMoves(moves)
+        this.#updateScoreboard( playerStats.player1.wins, playerStats.player2.wins, ties,)
+        if (isComplete) this.#revealModal(winner)
+        this.#setTurnIndicator(currentPlayer)
+    }
+
     // register event listeners
 
     bindGameResetEvent(handler){
@@ -42,18 +56,18 @@ export default class View {
 
     // helper methods
 
-    updateScoreboard(p1Wins, p2Wins, ties){
+    #updateScoreboard(p1Wins, p2Wins, ties){
         this.$.scoreTies.innerHTML = ties ? ties : 0
         this.$.scoreP1.innerHTML = `${p1Wins} Wins`
         this.$.scoreP2.innerHTML = `${p2Wins} Wins`
     }
 
-    hideAll(){
+    #hideAll(){
         this.#hideMenu()
         this.#hideModal()
     }
 
-    setTurnIndicator(player){
+    #setTurnIndicator(player){
         this.$.turn.innerHTML = "";
 
         this.$.turn.appendChild(this.#createIcon(player))
@@ -64,24 +78,24 @@ export default class View {
         this.$.turn.appendChild(p);
     }
 
-    initializeMoves(moves){
+    #initializeMoves(moves){
         moves.forEach(move => {
-            this.handlerPlayerMove(this.$.squares[move.squareId - 1], move.player)
+            this.#markMove(this.$.squares[move.squareId - 1], move.player)
         })
     }
     
-    resetSquares(){
+    #resetSquares(){
         this.$.squares.forEach((square) => {
           square.innerHTML = "";
         });
     };
 
-    handlerPlayerMove(square, player){
+    #markMove(square, player){
         square.appendChild(this.#createIcon(player));
     }
 
     
-    revealModal(winner){
+    #revealModal(winner){
         this.$.modalText.innerHTML = winner ? `${winner.name} Wins!` : "It's a Tie"
         this.$.modal.classList.remove("hidden");
     }

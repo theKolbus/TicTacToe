@@ -6,9 +6,10 @@ const initialValue = {
     }
 }
 
-export default class Game {
+export default class Game extends EventTarget {
 
     constructor(key, players) {
+        super()
         this.storageKey = key
         this.players = players
     }
@@ -16,7 +17,9 @@ export default class Game {
     get currentPlayer(){
         const state = this.#getState()
         if (state.moves.length === 0){
-            return this.players.player1
+            let playerkeys = Object.keys(this.players)
+            let randomPlayer = playerkeys[playerkeys.length * Math.random() << 0]
+            return this.players[randomPlayer]
         }else{ 
             return state.moves.at(-1).player.id === 1 ? this.players.player2 : this.players.player1;
         }
@@ -52,10 +55,14 @@ export default class Game {
         }
     
         return {
-          status: winner != null || state.moves.length >= 9 ? 'complete' : 'incomplete',
+          playable: winner != null || state.moves.length >= 9 ? 'complete' : 'incomplete',
           winner
         }
         
+    }
+
+    get isComplete(){
+        return this.status.playable === 'complete'
     }
 
     get stats(){
@@ -86,7 +93,7 @@ export default class Game {
     resetGame(){
         const stateClone = structuredClone(this.#getState())
         // const {status, moves} = stateClone
-        if (this.#isComplete){
+        if (this.isComplete){
             console.log('Game Pushed to History')
             stateClone.history.currentRound.push({status: this.status, moves: stateClone.moves})
         }
@@ -104,10 +111,6 @@ export default class Game {
         stateClone.history.allTime.push(...stateClone.history.currentRound)
         stateClone.history.currentRound = []
         this.#saveState(stateClone)
-    }
-
-    get #isComplete(){
-        return this.status.status === 'complete'
     }
 
     #getState(){
@@ -132,5 +135,6 @@ export default class Game {
         }
 
         window.localStorage.setItem(this.storageKey, JSON.stringify(newState))
+        this.dispatchEvent(new Event('statechange'))
     }
 }
