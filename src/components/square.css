@@ -1,0 +1,29 @@
+.square {
+    background-color: var(--gray);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+}
+
+.square:hover {
+    cursor: pointer;
+    opacity: 90%;
+}
+  
+@keyframes square-icon-animation {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+  
+.square i {
+  animation: 0.6s ease-in-out square-icon-animation;
+} 

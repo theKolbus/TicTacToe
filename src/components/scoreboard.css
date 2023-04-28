@@ -1,0 +1,29 @@
+.score {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+  }
+  
+  .score p {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  .score span {
+    font-size: 12px;
+    margin-top: 2px;
+  }
+  
+  #scoreboard-p1 {
+    background-color: var(--turquoise);
+  }
+  
+  #scoreboard-p2 {
+    background-color: var(--yellow);
+  }
+  
+  #scoreboard-tie {
+    background-color: var(--light-gray);
+  }
